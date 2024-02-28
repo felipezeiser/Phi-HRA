@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+
+<div class="row my-4">
+    <div class="col-sm-4">
+        <a href="{% url 'cadastrar_consulta' %}" class="btn bg-gradient-primary mb-0"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Nova Consulta</a>
+    </div>
+    <div class="col-sm-4">
+
+    </div>
+    <div class="col-sm-4">
+        <a class="btn bg-gradient-primary mb-0" href="{% url 'lista_arquivos_exames_paciente' paciente_id=paciente_id %}"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Visualizar Exames</a>
+
+    </div>
+</div>
+
+  <div class="row my-4">
+    <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
+      <div class="card">
+        <div class="card-header pb-0">
+          <div class="row">
+            <div class="col-lg-6 col-7">
+              <h6>Consultas - João da Silva</h6>
+             
+            </div>
+            <div class="col-lg-6 col-5 my-auto text-end">
+              <div class="dropdown float-lg-end pe-4">
+                <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-ellipsis-v text-secondary"></i>
+                </a>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body px-0 pb-2">
+          <div class="table-responsive">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Data da Consulta</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">CID</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Evolução</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for consulta in consultas %}
+                    <tr>
+                    
+                        <td>
+                            <div class="d-flex px-2 py-1">
+                            <div>
+                                <p class="text-md mb-0 p-3">
+                                <i class="fa fa-user text-dark"></i>
+                                </p>
+                            </div>
+                            <div class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 text-md">{{ consulta.data_consulta }}</h6>
+                            </div>
+                            </div>
+                        </td>
+                        <td class="align-middle text-center text-md">
+                            <span class="font-weight-bold"> {{ consulta.anotacoes }} </span>
+                        </td>
+                        <td class="align-middle text-center text-md">                            
+                            <a href="{% url 'detalhes_consulta' pk=consulta.pk %}" class="btn bg-gradient-primary mb-0"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Visualizar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+{% endblock %}

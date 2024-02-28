@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+
+{% block content %}
+
+<div class="row my-4">
+    <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
+      <div class="card">
+        <div class="card-header pb-0">
+          <div class="row">
+            <div class="col-lg-6 col-7">
+              <h6>Exames - João da Silva</h6>
+             
+            </div>
+            <div class="col-lg-6 col-5 my-auto text-end">
+              <div class="dropdown float-lg-end pe-4">
+                <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-ellipsis-v text-secondary"></i>
+                </a>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body px-0 pb-2">
+          <div class="table-responsive">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nome</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Arquivo</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for arquivo in arquivos %}
+                    <tr>
+                    <td>
+                        <div class="d-flex px-2 py-1">
+                        <div>
+                            <p class="text-md mb-0 p-3">
+                            <i class="fa fa-user text-dark"></i>
+                            </p>
+                        </div>
+                        <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-md">{{ arquivo.arquivo.name|cut:"prontuarios/" }}</h6>
+                        </div>
+                        </div>
+                    </td>
+                    
+                    <td class="align-middle text-center text-md">                        
+                        <a class="btn bg-gradient-primary mb-0" href="{{ arquivo.arquivo.url }}"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Visualizar</a>
+                    </td>
+                    </tr>
+                {% endfor %}
+
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+
+{% endblock %}

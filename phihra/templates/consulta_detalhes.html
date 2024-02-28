@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="row my-4">
+    <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
+      <div class="card">
+        <div class="card-header pb-0">
+          <div class="row">
+            <div class="col-lg-6 col-7">
+              <h6>Detalhes da Consulta - João da Silva</h6>
+             
+            </div>
+            <div class="col-lg-6 col-5 my-auto text-end">
+              <div class="dropdown float-lg-end pe-4">
+                <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-ellipsis-v text-secondary"></i>
+                </a>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body px-0 pb-2">
+            <div class="container mt-5">
+                <p class="text-body">Data: {{ consulta.data_consulta }}</p>
+                <p class="text-body">Anotações: {{ consulta.anotacoes }}</p>
+                <p class="text-body">Prescrições: {{ consulta.prescricoes }}</p>
+                <a class="btn bg-gradient-primary" href="{% url 'lista_consultas_paciente' pk=consulta.prontuario.paciente.pk %}">Voltar à lista de consultas</a>    
+            </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+{% endblock %}
