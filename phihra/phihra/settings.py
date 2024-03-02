@@ -14,7 +14,7 @@ from pathlib import Path
 import dj_database_url
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 if DEBUG:
     import environ
