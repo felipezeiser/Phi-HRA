@@ -3,17 +3,21 @@
 {% load static %}
 
 {% block content %}
+{% block url_nav %}
 
+<a href="{% url 'lista_pacientes' %}">Pacientes</a> / <a href="{% url 'lista_consultas_paciente' pk=paciente_id %}"> Consultas</a>
+
+{% endblock %}
 
 <div class="row my-4">
     <div class="col-sm-4">
-        <a href="{% url 'cadastrar_consulta' %}" class="btn bg-gradient-primary mb-0"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Nova Consulta</a>
+      <a href="{% url 'cadastrar_consulta' prontuario_id=prontuario_id %}" class="btn btn-primary">Cadastrar Nova Consulta</a>
     </div>
     <div class="col-sm-4">
-
+      <a class="btn bg-gradient-primary" href="{% url 'solicitacoes_exame' paciente_id=paciente_id %}"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Solicitações de Exames</a>
     </div>
     <div class="col-sm-4">
-        <a class="btn bg-gradient-primary mb-0" href="{% url 'lista_arquivos_exames_paciente' paciente_id=paciente_id %}"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Visualizar Exames</a>
+        <a class="btn bg-gradient-primary" href="{% url 'lista_arquivos_exames_paciente' paciente_id=paciente_id %}"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Visualizar Exames</a>
 
     </div>
 </div>
@@ -24,7 +28,7 @@
         <div class="card-header pb-0">
           <div class="row">
             <div class="col-lg-6 col-7">
-              <h6>Consultas - João da Silva</h6>
+              <h6>Consultas - {{ paciente }}</h6>
              
             </div>
             <div class="col-lg-6 col-5 my-auto text-end">

@@ -2,14 +2,28 @@
 
 {% load static %}
 
+{% load my_custom_tags %}
+
+{% block meta %}
+  <meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock %}
+
 {% block content %}
+
+
+{% block url_nav %}
+
+<a href="{% url 'lista_pacientes' %}">Pacientes</a> / <a href="{% url 'lista_consultas_paciente' pk=paciente.id %}"> Consultas</a> / <a href="{% url 'cadastrar_consulta' prontuario_id=paciente.prontuario.id %}">Nova Consulta</a>
+
+{% endblock %}
+
 <div class="row my-4">
     <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
       <div class="card">
         <div class="card-header pb-0">
           <div class="row">
             <div class="col-lg-6 col-7">
-              <h6>Nova Consulta</h6>
+              <h6>Nova Consulta para {{ paciente.nome }}</h6>
              
             </div>
             <div class="col-lg-6 col-5 my-auto text-end">
@@ -26,7 +40,43 @@
             <div class="container mt-5">
                 <form method="post">
                     {% csrf_token %}
-                    {{ form.as_p }}
+
+                    {% for field in form %}
+                        {% if field.name != "cids" and field.name != "exames"%}
+                            <p>
+                                {{ field.errors }}
+                                {{ field.label_tag }}<br>
+                                {{ field }}
+                            </p>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    <button type="button" id="botao_predicao" class="btn bg-gradient-primary">Avaliar Prontuário</button>
+
+
+                    <div class="id_cids">
+                      {{ form.cids.label_tag }}
+                      {% for cid in form.cids %}
+                          <div class="form-check">
+                              <label class="form-check-label" for="{{ cid.id_for_label }}">
+                                  <input class="form-check-input" type="checkbox" name="{{ form.cids.name }}" id="{{ cid.id_for_label }}" value="{{ forloop.counter }}">
+                                  {{ cid.choice_label }}
+                              </label>
+                          </div>
+                      {% endfor %}
+                  </div>
+                  
+                  <div class="id_exames">
+                      {{ form.exames.label_tag }}
+                      {% for exame in form.exames %}
+                          <div class="form-check">
+                              <label class="form-check-label" for="{{ exame.id_for_label }}">
+                                  <input class="form-check-input exame" type="checkbox" name="{{ form.exames.name }}" id="{{ exame.id_for_label }}" value="{{ forloop.counter }}">
+                                  {{ exame.choice_label }}
+                              </label>
+                          </div>
+                      {% endfor %}
+                  </div>
                     <button type="submit" class="btn bg-gradient-primary">Salvar Consulta</button>
                 </form>
             </div>
@@ -35,4 +85,83 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block script %}
+<script>
+  // Função para obter o valor do CSRF Token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Obtém o CSRF Token
+const csrftoken = getCookie('csrftoken');
+
+document.getElementById('botao_predicao').addEventListener('click', function() {
+    var textoProntuario = document.getElementById('id_anotacoes').value;
+    // console.log(textoProntuario);
+    fetch('/paciente/paciente/prever_cid/', { // Atualize com a URL correta
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({'texto_prontuario': textoProntuario})
+    })
+    .then(response => response.json())
+    .then(data => {
+        var cidPredito = data['cid_predito'];
+        console.log(cidPredito);
+        // Aqui você adiciona o código para marcar o CID predito no formulário
+        document.querySelectorAll('.form-check-label').forEach(function(label) {
+          if (label && label.innerText.trim() === cidPredito) {
+            var checkbox = label.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                checkbox.checked = true;
+                atualizarExamesComBaseNoCID(cidPredito);
+            }
+          }
+        });
+        
+    });
+});
+
+document.querySelectorAll('.form-check-input[name="cids"]').forEach(function(cidCheckbox) {
+    cidCheckbox.addEventListener('change', function() {
+        const cidDescricao = encodeURIComponent(this.nextSibling.textContent.trim());
+        atualizarExamesComBaseNoCID(cidDescricao);
+        console.log('entrou');
+    });
+});
+
+function atualizarExamesComBaseNoCID(cidDescricao) {
+    fetch(`/paciente/exames/associados/${cidDescricao}/`)  // Endpoint que retorna exames associados ao CID
+        .then(response => response.json())
+        .then(data => {
+            const examesAssociados = data.exames; // Supondo que a resposta seja {exames: [lista_de_ids_de_exames]}
+            console.log(examesAssociados);
+            document.querySelectorAll('.exame').forEach(function(exameElement) {
+                const exameId = exameElement.getAttribute('id').split('_')[2];
+                if (examesAssociados.includes(parseInt(exameId))) {
+                    exameElement.style.backgroundColor = 'lightgreen'; // Marca os exames associados com verde
+                } else {
+                    exameElement.style.backgroundColor = 'lightcoral'; // Marca os exames não associados com vermelho
+                }
+            });
+        });
+}
+
+
+</script>
 {% endblock %}

@@ -21,6 +21,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  {% block meta %}
+
+  {% endblock %}
+  
   <link rel="apple-touch-icon" sizes="76x76" href="{% static 'img/apple-icon.png' %}">
   <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
   <title>
@@ -167,10 +171,11 @@
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Páginas</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Pacientes</li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="{% url 'lista_pacientes' %}">Home</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">
+              {% block url_nav %}
+              {% endblock %}</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Pacientes</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -224,6 +229,9 @@
     
 
   </main>
+  
+  {% block script %}
+  {% endblock %}
   
   <!--   Core JS Files   -->
   <script src="{% static 'js/core/popper.min.js' %}"></script>

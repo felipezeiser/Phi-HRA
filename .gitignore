@@ -4,4 +4,6 @@ front/
 __pycache__
 db.sqlite3
 *.env
-.vscode
+*.vscode
+*.joblib
+*.bin

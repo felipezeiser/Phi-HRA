@@ -27,35 +27,42 @@ class Prontuario(models.Model):
     def __str__(self):
         return f"Prontuário do {self.paciente.nome}"
 
+class CID(models.Model):
+    codigo = models.CharField(max_length=10)
+    descricao = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.codigo} - {self.descricao}"
+
+class Exame(models.Model):
+    nome = models.CharField(max_length=100)
+    descricao = models.TextField()
+    cids_comuns = models.ManyToManyField(CID, related_name='exames_comuns')
+
+    def __str__(self):
+        return self.nome
+
 class Consulta(models.Model):
     prontuario = models.ForeignKey(Prontuario, on_delete=models.CASCADE, related_name='consultas')
     data_consulta = models.DateTimeField(auto_now_add=True)
     anotacoes = models.TextField(blank=True)
+    cids = models.ManyToManyField(CID, related_name='consultas_cids', blank=True)  # Campo novo
+
 
     def __str__(self):
         return f"Consulta em {self.data_consulta.strftime('%d/%m/%Y %H:%M')} - {self.prontuario.paciente.nome}"
 
-class Exame(models.Model):
-    prontuario = models.ForeignKey(Prontuario, on_delete=models.CASCADE, related_name='exames')
-    tipo_exame = models.CharField(max_length=100)
-    descricao = models.TextField()
-    arquivo = models.FileField(upload_to='exames/')
-    data_exame = models.DateField()
-
-    def __str__(self):
-        return f"Exame: {self.tipo_exame} - {self.prontuario.paciente.nome}"
-
-
 class SolicitacaoExame(models.Model):
     prontuario = models.ForeignKey('Prontuario', on_delete=models.CASCADE, related_name='solicitacoes_exames')
-    descricao = models.CharField(max_length=255)
+    descricao = models.TextField(blank=True)
     data_solicitacao = models.DateTimeField(auto_now_add=True)
     qr_code = models.TextField(blank=True, null=True)  # Para armazenar o QR Code em base64
 
     def save(self, *args, **kwargs):
-        if not self.qr_code:
-            # Garantir que o ID seja gerado
-            super().save(*args, **kwargs)
+        # Garantir que o ID seja gerado
+        super().save(*args, **kwargs)
+        
+        if not self.qr_code:    
             # Gerar o QR Code apenas se ele ainda não existe
             self.qr_code = self.gerar_qr_code()
             # Precisamos chamar save novamente para salvar o QR Code gerado
@@ -81,7 +88,16 @@ class SolicitacaoExame(models.Model):
 
     def get_absolute_url(self):
         # Retorna a URL absoluta para a visualização da solicitação de exame
-        return reverse('anexar_arquivo', kwargs={'prontuario_id': self.prontuario.pk})
+        return reverse('upload_arquivo_exame', kwargs={'solicitacao_exame_id': self.id})
+
+class ItemSolicitacaoExame(models.Model):
+    solicitacao_exame = models.ForeignKey(SolicitacaoExame, on_delete=models.CASCADE, related_name='itens')
+    exame = models.ForeignKey(Exame, on_delete=models.CASCADE)
+    arquivo = models.FileField(upload_to='prontuarios/', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.exame.nome} - Solicitação {self.solicitacao_exame.id}"
 
 class Arquivo(models.Model):
     arquivo = models.FileField(upload_to='prontuarios/')
+    solicitacao_exame = models.ForeignKey(SolicitacaoExame, on_delete=models.CASCADE, related_name='arquivos')

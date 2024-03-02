@@ -5,13 +5,20 @@
 
 {% block content %}
 
+{% block url_nav %}
+
+<a href="{% url 'lista_pacientes' %}">Pacientes</a> / <a href="{% url 'lista_consultas_paciente' pk=paciente.id %}"> Consultas</a> / <a href="{% url 'lista_arquivos_exames_paciente' paciente_id=paciente.id %}">Exames</a>
+
+{% endblock %}
+
+
 <div class="row my-4">
     <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
       <div class="card">
         <div class="card-header pb-0">
           <div class="row">
             <div class="col-lg-6 col-7">
-              <h6>Exames - João da Silva</h6>
+              <h6>Exames de {{ paciente.nome }}</h6>
              
             </div>
             <div class="col-lg-6 col-5 my-auto text-end">
@@ -44,14 +51,19 @@
                             </p>
                         </div>
                         <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-md">{{ arquivo.arquivo.name|cut:"prontuarios/" }}</h6>
+                            <h6 class="mb-0 text-md">{{ arquivo.exame.nome|cut:"prontuarios/" }}</h6>
                         </div>
                         </div>
                     </td>
-                    
-                    <td class="align-middle text-center text-md">                        
-                        <a class="btn bg-gradient-primary mb-0" href="{{ arquivo.arquivo.url }}"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Visualizar</a>
-                    </td>
+                    {% if arquivo.arquivo %}
+                      <td class="align-middle text-center text-md">                        
+                          <a class="btn bg-gradient-primary mb-0" href="{{ arquivo.arquivo.url }}"><i class="fa fa-file-text-o"></i>&nbsp;&nbsp;Visualizar</a>
+                      </td>
+                    {% else %}
+                      <td class="align-middle text-center text-md">                        
+                        <p class="text-danger">Exame ainda não realizado</p>
+                      </td>
+                    {% endif %}
                     </tr>
                 {% endfor %}
 

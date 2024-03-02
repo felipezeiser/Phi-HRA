@@ -4,6 +4,12 @@
 
 {% block content %}
 
+{% block url_nav %}
+
+<a href="{% url 'lista_pacientes' %}">Pacientes</a> / <a href="{% url 'lista_consultas_paciente' pk=object.prontuario.paciente.id %}"> Consultas</a> / <a href="{% url 'solicitacoes_exame' paciente_id=object.prontuario.paciente.id %}">Solicitações de Exames</a>
+
+{% endblock %}
+
 <div class="row my-4">
     <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
       <div class="card">

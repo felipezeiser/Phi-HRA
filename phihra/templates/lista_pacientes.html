@@ -4,6 +4,12 @@
 
 {% block content %}
 
+{% block url_nav %}
+
+<a href="{% url 'lista_pacientes' %}">Pacientes</a>
+
+{% endblock %}
+
 <div class="row">
     <div class="col-xl-4 col-sm-4 mb-xl-0 mb-4">
       <div class="card">
@@ -151,7 +157,7 @@
                 <p class="mb-1 pt-2 text-bold">Produzido por Phi Healthcare</p>
                 <h5 class="font-weight-bolder">Phi Health Report Analysis</h5>
                 <p class="mb-5">Veja como ajudamos a produzir uma saúde mais acessível!</p>
-                <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="https://phihc.com">
+                <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="https://phihc.com" target="_blank">
                   Veja Mais
                   <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
                 </a>
@@ -176,7 +182,7 @@
           <div class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3">
             <h5 class="text-white font-weight-bolder mb-4 pt-2">Crie com a agente</h5>
             <p class="text-white">Tem alguma ideia que pode revolucionar a área do cuidado á saúde? Podemos ajudar você!</p>
-            <a class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="javascript:;">
+            <a class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="https://phihc.com/" target="_blank">
               Veja Mais
               <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
             </a>

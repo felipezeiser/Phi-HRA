@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Upload Concluído</h1>
+    <p>O upload do exame foi concluído com sucesso!</p>
+    <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-primary">Adicionar Mais Exames</a>
+</div>
+{% endblock %}
