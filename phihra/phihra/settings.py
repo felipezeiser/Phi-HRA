@@ -146,3 +146,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'profissional.ProfissionalSaude'
 LOGIN_REDIRECT_URL = 'lista_pacientes'
+LOGIN_URL = 'login'

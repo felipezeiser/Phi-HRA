@@ -6,6 +6,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from .forms import PacienteForm, ConsultaForm, SolicitacaoExameForm, AnexarArquivoForm, ArquivoForm, ArquivoItemSolicitacaoExameForm
 from .models import Paciente, Consulta, SolicitacaoExame, Prontuario, Arquivo, ItemSolicitacaoExame, CID
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 from django.http import JsonResponse
@@ -32,9 +33,9 @@ class HomeView(View):
             return redirect(reverse_lazy('lista_pacientes'))  # Certifique-se de que 'lista_pacientes' é o nome correto da sua URL
         else:
             # Redireciona para a página de login ou home para usuários não autenticados
-            return redirect(reverse_lazy('home_non_authenticated'))  # Substitua 'home_non_authenticated' pela sua URL de homepage para usuários não autenticados
+            return redirect(reverse_lazy('login'))  # Substitua 'home_non_authenticated' pela sua URL de homepage para usuários não autenticados
 
-class ListaPacientesView(ListView):
+class ListaPacientesView(LoginRequiredMixin,ListView):
     model = Paciente
     template_name = 'lista_pacientes.html'
     context_object_name = 'pacientes'
@@ -47,7 +48,7 @@ class ListaPacientesView(ListView):
         context['quantidade_exames'] = ItemSolicitacaoExame.objects.filter(arquivo__isnull=False).count()
         return context
     
-class PacienteCreateView(CreateView):
+class PacienteCreateView(LoginRequiredMixin,CreateView):
     model = Paciente
     form_class = PacienteForm
     template_name = 'cadastrar_paciente.html'
@@ -57,7 +58,7 @@ class PacienteCreateView(CreateView):
         # Redireciona para a lista de consultas do paciente recém-criado
         return reverse('lista_consultas_paciente', kwargs={'pk': self.object.pk})
 
-class ConsultasListView(ListView):
+class ConsultasListView(LoginRequiredMixin,ListView):
     model = Consulta
     template_name = 'lista_consultas.html'
     context_object_name = 'consultas'
@@ -75,7 +76,7 @@ class ConsultasListView(ListView):
 
         return context
     
-class ConsultaCreateView(CreateView):
+class ConsultaCreateView(LoginRequiredMixin,CreateView):
     model = Consulta
     form_class = ConsultaForm
     template_name = 'cadastrar_consulta.html'
@@ -125,7 +126,7 @@ class ConsultaCreateView(CreateView):
         context['paciente'] = prontuario.paciente  # Adiciona o objeto paciente ao contexto
         return context
     
-class ConsultaDetailView(DetailView):
+class ConsultaDetailView(LoginRequiredMixin,DetailView):
     model = Consulta
     template_name = 'consulta_detalhes.html'  # Especifique o caminho do seu template de detalhes
     
@@ -134,7 +135,7 @@ class ConsultaDetailView(DetailView):
         context['paciente_id'] = self.kwargs.get('pk')  # Assume que 'pk' é o ID do paciente passado na URL
         return context
 
-class SolicitacaoExameCreateView(CreateView):
+class SolicitacaoExameCreateView(LoginRequiredMixin,CreateView):
     model = SolicitacaoExame
     form_class = SolicitacaoExameForm
     template_name = 'solicitar_exame.html'
@@ -156,11 +157,11 @@ class SolicitacaoExameCreateView(CreateView):
         return reverse_lazy('sua_url_de_sucesso')
 
 
-class VisualizarSolicitacaoExameView(DetailView):
+class VisualizarSolicitacaoExameView(LoginRequiredMixin,DetailView):
     model = SolicitacaoExame
     template_name = 'visualizar_solicitacao_exame.html'
 
-class AnexarArquivoView(FormView):
+class AnexarArquivoView(LoginRequiredMixin,FormView):
     template_name = 'anexar_arquivo.html'
     form_class = AnexarArquivoForm
     # success_url = reverse('lista_consultas_paciente', kwargs={'pk': self.object.prontuario.paciente.pk})  # Ajuste conforme necessário
@@ -186,7 +187,7 @@ class AnexarArquivoView(FormView):
             
         return reverse('lista_consultas_paciente', kwargs={'pk': prontuario.paciente.pk})
 
-class ArquivosExamesListView(ListView):
+class ArquivosExamesListView(LoginRequiredMixin,ListView):
     model = ItemSolicitacaoExame
     template_name = 'lista_arquivos_exames.html'
     context_object_name = 'arquivos'
@@ -203,7 +204,7 @@ class ArquivosExamesListView(ListView):
         context['paciente'] = self.paciente  # Adiciona o objeto paciente ao contexto
         return context
 
-class UploadArquivoExameView(FormView):
+class UploadArquivoExameView(LoginRequiredMixin,FormView):
     template_name = 'upload_exame.html'
     form_class = ArquivoItemSolicitacaoExameForm
     # Defina o success_url conforme necessário, por exemplo:
@@ -234,11 +235,11 @@ class UploadArquivoExameView(FormView):
         return context
 
 
-class SucessoUploadExamesView(TemplateView):
+class SucessoUploadExamesView(LoginRequiredMixin,TemplateView):
     template_name = 'sucesso_upload_exames.html'
 
 
-class SolicitacoesExameListView(ListView):
+class SolicitacoesExameListView(LoginRequiredMixin,ListView):
     model = SolicitacaoExame
     template_name = 'solicitacoes_exame_list.html'
     context_object_name = 'solicitacoes_exame'
