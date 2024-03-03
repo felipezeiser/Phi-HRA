@@ -39,7 +39,7 @@ else:
     SECRET_KEY = os.environ.get("SECRET_KEY")
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://phi-hra.onrender.com']
 
 
 # Application definition
