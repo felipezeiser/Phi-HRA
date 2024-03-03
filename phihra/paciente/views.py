@@ -23,7 +23,7 @@ import json
 import os
 print(os.listdir())
 # label_encoder = LabelEncoder().fit(['lista', 'de', 'cids'])
-label_encoder = joblib.load('phihra/paciente/labelEncoder.joblib')
+label_encoder = joblib.load('paciente/labelEncoder.joblib')
 
 
 class HomeView(View):
