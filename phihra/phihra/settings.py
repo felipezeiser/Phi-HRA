@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 import dj_database_url
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -39,8 +40,11 @@ else:
     SECRET_KEY = os.environ.get("SECRET_KEY")
 
 
-ALLOWED_HOSTS = ['https://phi-hra.onrender.com']
+ALLOWED_HOSTS = []
 
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 
