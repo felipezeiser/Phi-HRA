@@ -70,7 +70,7 @@ class SolicitacaoExame(models.Model):
 
     def gerar_qr_code(self):
         # Lógica para gerar o QR Code e retorná-lo como uma string base64
-        url = self.get_absolute_url()  # Método para obter a URL da solicitação de exame
+        url = 'https://phi-hra.onrender.com' + self.get_absolute_url()  # Método para obter a URL da solicitação de exame
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
