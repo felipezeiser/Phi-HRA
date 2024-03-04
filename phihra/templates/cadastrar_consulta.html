@@ -111,7 +111,7 @@ const csrftoken = getCookie('csrftoken');
 document.getElementById('botao_predicao').addEventListener('click', function() {
     var textoProntuario = document.getElementById('id_anotacoes').value;
     // console.log(textoProntuario);
-    fetch('/paciente/paciente/prever_cid/', { // Atualize com a URL correta
+    fetch('/paciente/prever_cid/', { // Atualize com a URL correta
         method: 'POST',
         headers: {
             'X-CSRFToken': csrftoken,
@@ -146,7 +146,7 @@ document.querySelectorAll('.form-check-input[name="cids"]').forEach(function(cid
 });
 
 function atualizarExamesComBaseNoCID(cidDescricao) {
-    fetch(`/paciente/exames/associados/${cidDescricao}/`)  // Endpoint que retorna exames associados ao CID
+    fetch(`/exames/associados/${cidDescricao}/`)  // Endpoint que retorna exames associados ao CID
         .then(response => response.json())
         .then(data => {
             const examesAssociados = data.exames; // Supondo que a resposta seja {exames: [lista_de_ids_de_exames]}
