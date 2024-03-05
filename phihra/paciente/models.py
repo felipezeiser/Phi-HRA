@@ -66,9 +66,14 @@ class SolicitacaoExame(models.Model):
         if not self.qr_code:    
             # Gerar o QR Code apenas se ele ainda não existe
             self.qr_code = self.gerar_qr_code()
-            self.url = 'https://phi-hra.onrender.com' + self.get_absolute_url()
+            
             # Precisamos chamar save novamente para salvar o QR Code gerado
-            super().save(update_fields=['qr_code', 'url'])
+            super().save(update_fields=['qr_code'])
+        if not self.url:
+
+            self.url = 'https://phi-hra.onrender.com' + self.get_absolute_url()
+            super().save(update_fields=['url'])
+
 
     def gerar_qr_code(self):
         # Lógica para gerar o QR Code e retorná-lo como uma string base64
