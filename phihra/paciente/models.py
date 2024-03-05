@@ -57,6 +57,7 @@ class SolicitacaoExame(models.Model):
     descricao = models.TextField(blank=True)
     data_solicitacao = models.DateTimeField(auto_now_add=True)
     qr_code = models.TextField(blank=True, null=True)  # Para armazenar o QR Code em base64
+    url = models.CharField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         # Garantir que o ID seja gerado
@@ -65,8 +66,9 @@ class SolicitacaoExame(models.Model):
         if not self.qr_code:    
             # Gerar o QR Code apenas se ele ainda não existe
             self.qr_code = self.gerar_qr_code()
+            self.url = 'https://phi-hra.onrender.com' + self.get_absolute_url()
             # Precisamos chamar save novamente para salvar o QR Code gerado
-            super().save(update_fields=['qr_code'])
+            super().save(update_fields=['qr_code', 'url;])
 
     def gerar_qr_code(self):
         # Lógica para gerar o QR Code e retorná-lo como uma string base64
